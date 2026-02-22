@@ -1,0 +1,28 @@
+{
+  "name": "autogen",
+  "version": "1.0.0",
+  "description": "Autonomous GitHub Agent System - Orchestrates Claude Code agents in Docker containers to solve GitHub issues",
+  "private": true,
+  "workspaces": [
+    "orchestrator",
+    "agent"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev:orchestrator": "npm run dev --workspace=orchestrator",
+    "dev:agent": "npm run dev --workspace=agent",
+    "build:docker:base": "docker build -f docker/base.Dockerfile -t ghcr-agent:latest .",
+    "build:docker:agent": "docker build -f docker/agent.Dockerfile -t ghcr-agent:runtime .",
+    "lint": "eslint . --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "github",
+    "agent",
+    "claude",
+    "docker",
+    "automation"
+  ],
+  "author": "",
+  "license": "MIT"
+}

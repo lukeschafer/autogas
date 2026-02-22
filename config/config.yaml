@@ -1,0 +1,91 @@
+# Autonomous GitHub Agent System Configuration
+# Copy this file to config.yaml and update with your settings
+
+# GitHub settings
+github:
+  # Personal access token or GitHub App credentials
+  # Requires: repo (full access), read:org (for private repos)
+  token: ${GITHUB_TOKEN}
+  # Only needed if using webhook mode (USE_POLLING=false)
+  webhook_secret: ${WEBHOOK_SECRET}
+
+# Repositories to watch
+repos:
+  - owner: "your-org"
+    name: "your-repo"
+    trigger_comment: "@bot take this"
+    enabled: true
+    # Optional: Use a named prompt template (defined in prompts section)
+    # prompt_template: "frontend"
+  # Add more repos as needed:
+  # - owner: "another-org"
+  #   name: "another-repo"
+  #   trigger_comment: "@agent solve this"
+  #   enabled: true
+  #   prompt_template: "strict"
+
+# Claude settings
+claude:
+  api_key: ${ANTHROPIC_API_KEY}
+  max_tokens: 200000
+
+# Agent prompt templates
+# These define how Claude Code works on issues
+prompts:
+  # Default prompt template (used when repo doesn't specify one)
+  default: |
+    You are an AI software development agent. Your task is to solve the following GitHub issue.
+
+    ## Issue
+    Title: {{issue_title}}
+
+    {{#if issue_body}}
+    Description:
+    {{issue_body}}
+    {{/if}}
+
+    ## Instructions
+    1. First, explore the codebase to understand the structure and relevant files.
+    2. Analyze the issue and determine what changes are needed.
+    3. Implement the solution, following the existing code style and patterns.
+    4. Test your changes if appropriate (run tests, lint, etc.).
+    5. Commit your changes with a descriptive commit message.
+    6. When complete, respond with "DONE" and a summary of what was done.
+
+    Begin working on this issue now.
+
+  # Review feedback prompt template
+  review_feedback: |
+    You received feedback on your pull request. Please address the feedback and make necessary changes.
+
+    ## Feedback
+    {{feedback}}
+
+    ## Instructions
+    1. Read and understand the feedback.
+    2. Make the necessary changes to address the feedback.
+    3. Test your changes if applicable.
+    4. Commit the changes with a message like "Address review feedback: [summary]".
+    5. When complete, respond with "DONE" and a summary of what was changed.
+
+    Begin addressing the feedback now.
+
+  # You can also reference external prompt files:
+  # frontend: "prompts/frontend-react.md"
+  # strict: "prompts/strict-typescript.md"
+
+# Container settings
+containers:
+  max_concurrent: 5
+  base_image: "ghcr-agent:latest"
+  network: "bridge"
+  # Resource limits
+  memory_limit: "4g"
+  cpu_limit: "2"
+
+# Webhook server
+server:
+  port: 3000
+  # For local development, use ngrok or smee.io
+  # For production, use your actual domain
+  public_url: ${PUBLIC_URL}

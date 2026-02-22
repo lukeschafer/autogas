@@ -1,0 +1,38 @@
+# Development Docker Compose file
+# Run with: docker-compose -f docker/docker-compose.yml up
+version: '3.8'
+
+services:
+  orchestrator:
+    build:
+      context: ..
+      dockerfile: docker/orchestrator.Dockerfile
+    container_name: autogen-orchestrator
+    ports:
+      - "3000:3000"
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - PUBLIC_URL=${PUBLIC_URL}
+      - SERVER_PORT=3000
+      - MAX_CONCURRENT_CONTAINERS=5
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # Docker-in-Docker for spawning agents
+      - ../config:/app/config:ro
+    restart: unless-stopped
+    networks:
+      - autogen-network
+
+  # Optional: Redis for distributed state (future use)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: autogen-redis
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - autogen-network
+
+networks:
+  autogen-network:
+    driver: bridge

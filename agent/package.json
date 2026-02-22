@@ -1,0 +1,25 @@
+{
+  "name": "@autogen/agent",
+  "version": "1.0.0",
+  "description": "Agent code that runs inside Docker containers",
+  "main": "dist/agent.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/agent.ts",
+    "start": "node dist/agent.js",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.1",
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "playwright": "^1.45.0",
+    "simple-git": "^3.25.0",
+    "winston": "^3.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}

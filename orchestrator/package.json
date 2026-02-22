@@ -1,0 +1,28 @@
+{
+  "name": "@autogen/orchestrator",
+  "version": "1.0.0",
+  "description": "Orchestrator service for managing GitHub agent containers",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "dockerode": "^4.0.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "js-yaml": "^4.1.0",
+    "octokit": "^4.0.2",
+    "winston": "^3.13.0"
+  },
+  "devDependencies": {
+    "@types/dockerode": "^3.3.30",
+    "@types/express": "^4.17.21",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.12.12",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
