@@ -52,6 +52,13 @@ export class ContainerManager {
       `AUTO_CONFIRM=true`
     ];
 
+    // Add custom container env vars from config (for local overrides, testing, etc.)
+    if (this.config.containers.env) {
+      for (const [key, value] of Object.entries(this.config.containers.env)) {
+        env.push(`${key}=${this.escapeEnvVar(value)}`);
+      }
+    }
+
     // Container configuration
     const containerConfig: Docker.ContainerCreateOptions = {
       name: containerName,

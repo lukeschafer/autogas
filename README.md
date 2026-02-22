@@ -363,6 +363,25 @@ repos:
 cp config/config.local.yaml.example config/config.local.yaml
 ```
 
+**Container Environment Variables**
+
+You can also pass custom environment variables into all agent containers via `containers.env` in your config:
+
+```yaml
+# In config/config.local.yaml
+containers:
+  env:
+    DEBUG: "autogen:*"           # Enable debug logging
+    NODE_ENV: "development"      # Set Node environment
+    MY_API_KEY: "${MY_API_KEY}"  # Reference env variables
+```
+
+These variables are injected into every agent container and available to the agent code. Perfect for:
+- Repository-specific API keys
+- Debug flags
+- Feature toggles for testing
+- Third-party service credentials
+
 ### Orchestrator Settings
 
 | Option | Default | Description |

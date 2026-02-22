@@ -15,8 +15,14 @@ repos:
 # This is only used by the orchestrator, not the config validation
 
 # Override container settings for local development
-# containers:
-#   max_concurrent: 2  # Fewer concurrent containers for local testing
+containers:
+  max_concurrent: 2  # Fewer concurrent containers for local testing
+  # Additional environment variables passed into agent containers
+  env:
+    # Enable debug logging
+    DEBUG: "autogen:*"
+    # Set development mode
+    NODE_ENV: "development"
 
 # Custom prompts for local testing
 # prompts:

@@ -123,6 +123,7 @@ export interface OrchestratorConfig {
     network: string;
     memoryLimit: string;
     cpuLimit: string;
+    env?: Record<string, string>;  // Additional env vars passed to all containers
   };
   server: {
     port: number;

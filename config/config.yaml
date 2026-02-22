@@ -82,6 +82,12 @@ containers:
   # Resource limits
   memory_limit: "4g"
   cpu_limit: "2"
+  # Additional environment variables passed to all agent containers
+  # Useful for repository-specific settings, API keys, debug flags, etc.
+  # env:
+  #   NODE_ENV: "development"
+  #   DEBUG: "autogen:*"
+  #   MY_API_KEY: "${MY_API_KEY}"  # Can reference environment variables
 
 # Webhook server
 server:
