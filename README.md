@@ -110,6 +110,20 @@ repos:
     enabled: true
 ```
 
+**Optional: Create a local config** (not checked in)
+
+For local development, create `config/config.local.yaml` to override settings:
+
+```bash
+cp config/config.local.yaml.example config/config.local.yaml
+```
+
+Local config deep-merges with `config.yaml` so you only need to specify what you want to override. This file is gitignored and perfect for:
+- Your personal test repositories
+- Faster polling intervals for testing
+- Custom prompts for experimentation
+- Different container limits for your machine
+
 ### 4. Build the Base Docker Image
 
 ```bash
@@ -244,6 +258,30 @@ The orchestrator will log the webhook URL for verification.
 9. **Cleanup**: Container removed when PR closes
 
 ## Configuration Options
+
+### Local Configuration (config.local.yaml)
+
+For local development, create `config/config.local.yaml` to override settings without committing them:
+
+```yaml
+# Override just the repos for local testing
+repos:
+  - owner: "my-username"
+    name: "my-test-repo"
+    trigger_comment: "@bot test"
+    enabled: true
+```
+
+**How it works:**
+- `config/config.local.yaml` is gitignored
+- Settings are deep-merged with `config/config.yaml`
+- Local settings take precedence
+- Perfect for personal test repos and experimentation
+
+**Copy the example:**
+```bash
+cp config/config.local.yaml.example config/config.local.yaml
+```
 
 ### Orchestrator Settings
 

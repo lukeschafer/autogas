@@ -10,7 +10,16 @@ import { OrchestratorConfig, PromptTemplates } from './types';
 export function loadConfig(configPath: string = 'config/config.yaml'): OrchestratorConfig {
   try {
     const fileContents = fs.readFileSync(configPath, 'utf8');
-    const config = yaml.load(fileContents) as any;
+    let config = yaml.load(fileContents) as any;
+
+    // Load local config overrides if exists
+    const localConfigPath = configPath.replace('.yaml', '.local.yaml');
+    if (fs.existsSync(localConfigPath)) {
+      const localFileContents = fs.readFileSync(localConfigPath, 'utf8');
+      const localConfig = yaml.load(localFileContents) as any;
+      // Deep merge local config over base config
+      config = deepMerge(config, localConfig);
+    }
 
     // Substitute environment variables
     const substituted = substituteEnvVars(config);
@@ -27,6 +36,23 @@ export function loadConfig(configPath: string = 'config/config.yaml'): Orchestra
   } catch (error) {
     throw new Error(`Failed to load configuration from ${configPath}: ${error}`);
   }
+}
+
+/**
+ * Deep merge two objects
+ */
+function deepMerge(base: any, override: any): any {
+  const result = { ...base };
+
+  for (const key of Object.keys(override)) {
+    if (override[key] !== null && typeof override[key] === 'object' && !Array.isArray(override[key])) {
+      result[key] = deepMerge(base[key] || {}, override[key]);
+    } else {
+      result[key] = override[key];
+    }
+  }
+
+  return result;
 }
 
 /**

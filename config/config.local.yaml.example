@@ -1,0 +1,26 @@
+# Local Development Configuration
+# Copy this file to config.local.yaml and customize for your local setup
+# This file is gitignored and won't be checked in
+
+# Override repos for local testing
+repos:
+  - owner: "your-github-username"
+    name: "your-test-repo"
+    trigger_comment: "@bot take this"
+    enabled: true
+    # Use a custom prompt template for testing
+    prompt_template: "minimal"
+
+# Override polling interval for faster testing (e.g., every 10 seconds)
+# This is only used by the orchestrator, not the config validation
+
+# Override container settings for local development
+# containers:
+#   max_concurrent: 2  # Fewer concurrent containers for local testing
+
+# Custom prompts for local testing
+# prompts:
+#   default: |
+#     Quick test mode - solve this fast:
+#     {{issue_title}}
+#     {{issue_body}}

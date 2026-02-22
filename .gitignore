@@ -13,6 +13,9 @@ dist/
 .env.local
 .env.*.local
 
+# Local config overrides
+config/config.local.yaml
+
 # IDE
 .vscode/
 .idea/
