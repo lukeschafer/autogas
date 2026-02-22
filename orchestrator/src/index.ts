@@ -14,7 +14,9 @@ import { WebhookServer } from './webhooks';
 import { GitHubPoller } from './poller';
 
 // Load environment variables
-dotenv.config();
+// .env.local overrides .env (useful for local development)
+dotenv.config({ path: '.env' });
+dotenv.config({ path: '.env.local', override: true });
 
 // Use polling mode by default for local development
 const USE_POLLING = process.env.USE_POLLING !== 'false';

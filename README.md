@@ -34,23 +34,23 @@ The system defaults to **polling mode** for easy local development.
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      Orchestrator Service                        │
-│  ┌──────────────┐  ┌─────────────┐  ┌──────────────────┐       │
-│  │ Webhook      │  │ Container   │  │ State Manager    │       │
-│  │ Server       │  │ Manager     │  │ (Active Issues)  │       │
-│  └──────────────┘  └─────────────┘  └──────────────────┘       │
-└─────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────┐
+│                      Orchestrator Service                 │
+│  ┌──────────────┐  ┌─────────────┐  ┌──────────────────┐  │
+│  │ Webhook      │  │ Container   │  │ State Manager    │  │
+│  │ Server       │  │ Manager     │  │ (Active Issues)  │  │
+│  └──────────────┘  └─────────────┘  └──────────────────┘  │
+└───────────────────────────────────────────────────────────┘
                               │
                               ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      Docker Containers                           │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐           │
-│  │ Agent 1 │  │ Agent 2 │  │ Agent 3 │  │ Agent 4 │  ...       │
-│  │ (Issue  │  │ (Issue  │  │ (Issue  │  │ (Issue  │           │
-│  │  #42)   │  │  #47)   │  │  #51)   │  │  #55)   │           │
-│  └─────────┘  └─────────┘  └─────────┘  └─────────┘           │
-└─────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────┐
+│                      Docker Containers                    │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐       │
+│  │ Agent 1 │  │ Agent 2 │  │ Agent 3 │  │ Agent 4 │  ...  │
+│  │ (Issue  │  │ (Issue  │  │ (Issue  │  │ (Issue  │       │
+│  │  #42)   │  │  #47)   │  │  #51)   │  │  #55)   │       │
+│  └─────────┘  └─────────┘  └─────────┘  └─────────┘       │
+└───────────────────────────────────────────────────────────┘
 ```
 
 ## Features
@@ -126,6 +126,22 @@ ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 USE_POLLING=true
 POLL_INTERVAL_SECONDS=60  # Check GitHub every 60 seconds
 ```
+
+**Optional: Create a local env file** (not checked in)
+
+For local development overrides, create `.env.local`:
+
+```bash
+cp .env.local.example .env.local
+```
+
+`.env.local` values override `.env` values - perfect for:
+- Your personal API tokens
+- Faster polling intervals for testing
+- Different container limits for your machine
+- Local orchestrator URL
+
+The `.env.local` file is already gitignored.
 
 ### 3. Update Repository Configuration
 
@@ -288,9 +304,44 @@ The orchestrator will log the webhook URL for verification.
 
 ## Configuration Options
 
-### Local Configuration (config.local.yaml)
+### Local Override Files
 
-For local development, create `config/config.local.yaml` to override settings without committing them:
+For local development, two files can be used for overrides (both are gitignored):
+
+**`.env.local`** - Environment variable overrides
+```bash
+cp .env.local.example .env.local
+```
+
+**`config/config.local.yaml`** - Configuration overrides
+```bash
+cp config/config.local.yaml.example config/config.local.yaml
+```
+
+**How they work:**
+- `.env.local` values override `.env` (loaded by orchestrator at startup)
+- `config/config.local.yaml` deep-merges with `config/config.yaml`
+- Use these for your personal tokens, test repos, and development settings
+
+#### Example .env.local
+
+```env
+# Faster polling for testing
+POLL_INTERVAL_SECONDS=10
+
+# Fewer containers for local machine
+MAX_CONCURRENT_CONTAINERS=2
+```
+
+#### Example config.local.yaml
+
+```yaml
+repos:
+  - owner: "my-username"
+    name: "my-test-repo"
+    trigger_comment: "@bot test"
+    enabled: true
+```
 
 ```yaml
 # Override just the repos for local testing
