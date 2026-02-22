@@ -69,8 +69,37 @@ The system defaults to **polling mode** for easy local development.
 
 - Docker installed and running
 - Node.js 20+ (for local development)
-- GitHub Personal Access Token with `repo` scope
+- GitHub Personal Access Token with `repo` scope (see below)
 - Anthropic API Key
+
+### GitHub Personal Access Token (PAT) Setup
+
+The agent needs a GitHub PAT with the following permissions:
+
+**Required scopes:**
+- `repo` (Full control of private repositories)
+  - This includes: read/write access to code, issues, PRs, and comments
+
+**How to create:**
+
+1. Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
+2. Click "Generate new token (classic)"
+3. Set scopes:
+   - ✅ **repo** (Full control of private repositories)
+4. Generate and copy the token
+5. Add to your `.env` file as `GITHUB_TOKEN`
+
+**What the token is used for:**
+| Operation | Required Permission |
+|-----------|-------------------|
+| Read issues | `repo` |
+| Read/write comments | `repo` |
+| Create pull requests | `repo` |
+| Read PR reviews | `repo` |
+| Clone repositories | `repo` |
+| Push to branches | `repo` |
+
+**Note:** For public repositories only, you could use the narrower `public_repo` scope, but `repo` is recommended for simplicity and works for both public and private repos.
 
 ### 1. Clone and Install
 
