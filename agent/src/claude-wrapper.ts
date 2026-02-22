@@ -20,22 +20,36 @@ export class ClaudeWrapper {
   }
 
   /**
+   * Get environment variables for Claude Code execution
+   */
+  private getEnv(): Record<string, string> {
+    return {
+      ...process.env,
+      ANTHROPIC_API_KEY: this.apiKey,
+      PATH: process.env.PATH,
+      // Force non-interactive mode
+      CI: 'true',
+      CLAUDE_NON_INTERACTIVE: 'true',
+      AUTO_CONFIRM: 'true',
+      NODE_ENV: 'production',
+      // Support custom Anthropic endpoints (e.g., TensorFoundry)
+      ...(process.env.ANTHROPIC_BASE_URL && { ANTHROPIC_BASE_URL: process.env.ANTHROPIC_BASE_URL }),
+      ...(process.env.DEFAULT_MODEL && { DEFAULT_MODEL: process.env.DEFAULT_MODEL }),
+      ...(process.env.ANTHROPIC_MODEL && { ANTHROPIC_MODEL: process.env.ANTHROPIC_MODEL }),
+      ...(process.env.ANTHROPIC_SMALL_FAST_MODEL && { ANTHROPIC_SMALL_FAST_MODEL: process.env.ANTHROPIC_SMALL_FAST_MODEL }),
+      ...(process.env.ANTHROPIC_DEFAULT_HAIKU_MODEL && { ANTHROPIC_DEFAULT_HAIKU_MODEL: process.env.ANTHROPIC_DEFAULT_HAIKU_MODEL }),
+      ...(process.env.ANTHROPIC_DEFAULT_SONNET_MODEL && { ANTHROPIC_DEFAULT_SONNET_MODEL: process.env.ANTHROPIC_DEFAULT_SONNET_MODEL })
+    };
+  }
+
+  /**
    * Execute Claude Code with a prompt
    */
   async execute(prompt: string, timeoutMs: number = 30 * 60 * 1000): Promise<ClaudeResult> {
     return new Promise((resolve) => {
       logger.info('Starting Claude Code execution (non-interactive)');
 
-      const env = {
-        ...process.env,
-        ANTHROPIC_API_KEY: this.apiKey,
-        PATH: process.env.PATH,
-        // Force non-interactive mode
-        CI: 'true',
-        CLAUDE_NON_INTERACTIVE: 'true',
-        AUTO_CONFIRM: 'true',
-        NODE_ENV: 'production'
-      };
+      const env = this.getEnv();
 
       // Claude Code reads input from stdin
       // Run in non-interactive mode - no confirmations, auto-proceed
@@ -150,15 +164,7 @@ export class ClaudeWrapper {
       logger.info('Executing Claude Code with prompt file (non-interactive)');
 
       return new Promise((resolve) => {
-        const env = {
-          ...process.env,
-          ANTHROPIC_API_KEY: this.apiKey,
-          // Force non-interactive mode
-          CI: 'true',
-          CLAUDE_NON_INTERACTIVE: 'true',
-          AUTO_CONFIRM: 'true',
-          NODE_ENV: 'production'
-        };
+        const env = this.getEnv();
 
         const claude = spawn('claude', ['--prompt', promptFile, '--yes', '--non-interactive'], {
           cwd: this.workingDir,
@@ -242,15 +248,7 @@ export class ClaudeWrapper {
     logger.info('Executing Claude Code command', { command, args });
 
     return new Promise((resolve) => {
-      const env = {
-        ...process.env,
-        ANTHROPIC_API_KEY: this.apiKey,
-        // Force non-interactive mode
-        CI: 'true',
-        CLAUDE_NON_INTERACTIVE: 'true',
-        AUTO_CONFIRM: 'true',
-        NODE_ENV: 'production'
-      };
+      const env = this.getEnv();
 
       const claude = spawn('claude', [command, ...args, '--yes'], {
         cwd: this.workingDir,

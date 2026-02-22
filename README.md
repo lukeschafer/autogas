@@ -382,6 +382,25 @@ These variables are injected into every agent container and available to the age
 - Feature toggles for testing
 - Third-party service credentials
 
+**Custom Anthropic Endpoints**
+
+To use a custom Anthropic API endpoint (like TensorFoundry), add the appropriate environment variables:
+
+```yaml
+containers:
+  env:
+    ANTHROPIC_BASE_URL: "https://api.tensorfoundry.io/anthropic"
+    DEFAULT_MODEL: "tf/forge-code-2.0-code"
+```
+
+Supported environment variables that get passed to Claude Code:
+- `ANTHROPIC_BASE_URL` - Custom API base URL
+- `DEFAULT_MODEL` - Default model to use
+- `ANTHROPIC_MODEL` - Model selection
+- `ANTHROPIC_SMALL_FAST_MODEL` - Haiku model
+- `ANTHROPIC_DEFAULT_HAIKU_MODEL` - Haiku default
+- `ANTHROPIC_DEFAULT_SONNET_MODEL` - Sonnet default
+
 ### Orchestrator Settings
 
 | Option | Default | Description |
